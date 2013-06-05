@@ -1,0 +1,192 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href='http://fonts.googleapis.com/css?family=Ropa+Sans' rel='stylesheet' type='text/css'>
+<style>
+	body {
+		background-color: #000000;
+		margin: 0px;
+		overflow: hidden;
+		color: #000000;
+	}
+	
+	#topbar {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 16px;
+		color: #000000;
+		background-color: #edc10e;
+		display : block;
+		padding: 2px;
+		overflow: hidden;
+		opacity: 75%;
+	}
+	
+	#topbar ul {
+		list-style: none;
+		list-style-type:none;
+		padding:0px;
+		margin:0px;
+	}
+	
+	#topbar li {
+		display:inline;
+		padding: 10px;
+	}
+	
+	#attr-name {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 48px;
+		color: #ffffff;
+		background-color: #edc10e;
+		display : block;
+		padding: 5px;
+		overflow: hidden;
+		position: fixed;
+		top: 20%;
+		right: 0px;
+		padding: 10px;
+		opacity: 75%;
+	}
+	
+	#attr-name p {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 14px;
+		color: #000000;
+		background-color: #edc10e;
+		display : block-inline;
+		overflow: hidden;
+		left: 0px;
+		margin: 0px;
+	}
+	
+	#details {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 14px;
+		color: #000000;
+		background-color: #edc10e;
+		display : block;
+		overflow: hidden;
+		left: 0px;
+		margin: 0px;
+	}
+	
+	#button {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 36px;
+		color: #000000;
+		position: fixed;
+		background-color: #edc10e;
+		display: block;
+		top: 80%;
+		left: 0px;
+		text-align: center;
+	}
+	
+	#button a:hover{color: #ffffff;}
+	#button a:link{color: #000000; text-decoration: none;}
+	
+	#button ul {
+		list-style: none;
+		list-style-type:none;
+		padding:0px;
+		margin:0px;
+	}
+	
+	#button li {
+		display:inline;
+		padding: 10px;
+	}
+		
+	#bottombar {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 16px;
+		color: #000000;
+		position: fixed;
+		background-color: #edc10e;
+		display : block;
+		bottom: 0px;
+		width: 100%;
+		left: 0px;
+		padding: 2px;
+		overflow: hidden;
+		opacity: 75%;
+		z-index: 100;
+		text-align: left;
+	}
+	
+	#bottombar a:hover{color: #ffffff;}
+	#bottombar a:link{color: #000000; text-decoration: none;}
+
+	
+	#bottombar ul {
+		list-style: none;
+		list-style-type:none;
+		padding:0px;
+		margin:0px;
+	}
+	
+	#bottombar li {
+		display:inline;
+		padding: 10px;
+	}
+</style>
+<title>Strange Attractors</title>
+
+<script type="text/javascript" src="js/three.min.js"></script>
+<script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
+<script type="text/javascript" src="js/TrackballControls.js"></script>
+<script src="js/shaders/ConvolutionShader.js"></script>
+<script src="js/shaders/CopyShader.js"></script>
+<script src="js/shaders/FXAAShader.js"></script>
+
+<script src="js/shaders/EffectComposer.js"></script>
+<script src="js/shaders/MaskPass.js"></script>
+<script src="js/shaders/RenderPass.js"></script>
+<script src="js/shaders/ShaderPass.js"></script>
+<script src="js/shaders/BloomPass.js"></script>
+<script src="js/attractorList.js"></script>
+
+
+
+</head>
+<body bgcolor="black">
+
+
+
+<div id="topbar">
+<ul>
+	<li><a>&nbsp:.::</a></li>
+	<li><a>&nbsp+ strange attractors</a></li>
+	<li><a>&nbsp+ watch this space</a></li>
+</ul>	
+</div>
+
+<div id="attr-name">
+oops .. !
+<div id ="details">
+Something went wrong. Does your browser <br>
+support <a href = "http://get.webgl.org/">WebGL </a> ?
+</div>
+</div>
+<div id="button" >
+<ul>
+	<li><a href="#" onclick ="changeAttractor(-1)">-</a></li>
+	<li><a href="#" onclick ="changeAttractor(1)">+</a></li>
+</ul>
+</div>
+
+<script type="text/javascript" src="js/strangeAttractors.js"></script>
+
+
+<div id="bottombar">
+<ul>
+	<li><a>&nbsp ::.</a></li>
+	<li><a href="http://threejs.org/" target = "_blank">&nbsp Three.js</a></li>
+	<li><a>&nbsp LMB + drag to orbit, MMB / scroll to zoom</a></li>
+	<li><a href = "acknowledgements.html" target="_blank">&nbsp acknowledgements</a></li>
+	<li><a>&nbsp arefin mohiuddin</a></li>
+</ul>	
+</div>
+</body>
+</html>
