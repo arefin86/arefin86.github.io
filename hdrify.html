@@ -12,12 +12,13 @@
 	body {
 		background-color: #000000;
 		margin: 0px;
-		overflow: hidden;
 		color: #000000;
 	}
 	
 	#topbar {
 		font-family: 'Ropa Sans', sans-serif;
+		position: fixed;
+		width: 100%;
 		font-size: 16px;
 		color: #000000;
 		background-color: #edc10e;
@@ -118,6 +119,7 @@
 		right: 0px;
 		text-align: right;
 		z-index: 102;
+		width: auto;
 	}
 	
 	#social ul {
@@ -164,39 +166,36 @@
 		display:inline;
 		padding: 10px;
 	}
+	
+	#input {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 18px;
+		color: #000000;
+		background-color: #edc10e;
+		position: absolute;
+		height: auto;
+		width: auto;
+		margin: 0px;
+		padding: 10px;
+		left: 25%;
+		top: 5%;
+	}
+	
 </style>
-<title>Strange Attractors</title>
-<meta name="description" content="Visualization of chaotic flows using three.js / webgl - strange attractors - an experiment by Arefin Mohiuddin" />
+<title>HDRify - fake HDR effect</title>
+<meta name="description" content="HDRify - fake HDR effect" />
 
-<script type="text/javascript" src="js/three.min.js"></script>
-<script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
-<script type="text/javascript" src="js/TrackballControls.js"></script>
-<script src="js/shaders/ConvolutionShader.js"></script>
-<script src="js/shaders/CopyShader.js"></script>
-<script src="js/shaders/FXAAShader.js"></script>
-
-<script src="js/shaders/EffectComposer.js"></script>
-<script src="js/shaders/MaskPass.js"></script>
-<script src="js/shaders/RenderPass.js"></script>
-<script src="js/shaders/ShaderPass.js"></script>
-<script src="js/shaders/BloomPass.js"></script>
-<script src="js/attractorList.js"></script>
+<script type="text/javascript" src="js/glMatrix-0.9.5.min.js"></script>
+<script type="text/javascript" src ="js/imageProcess.js"></script>
 
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Strange Attractors - chaotic flows" />
-<meta property="og:image" content="http://i.imgur.com/uFA5Xlb.png"/>
-<meta property="og:image" content="http://i.imgur.com/CtoAKUV.png"/>
-<meta property="og:image" content="http://i.imgur.com/B9aXULm.png"/>
-<meta property="og:image" content="http://i.imgur.com/ApaI0ud.png"/>
-<meta property="og:image" content="http://i.imgur.com/IymRQAj.png"/>
-<meta property="og:image" content="http://i.imgur.com/OEJFKaS.png"/>
-<meta property="og:image" content="http://i.imgur.com/C5EIzC5.png"/>
-<meta property="og:image" content="http://i.imgur.com/CcYuNNz.png"/>
-<meta property="og:image" content="http://i.imgur.com/24Q3QUy.png"/>
+<meta property="og:title" content="HDRify - fake HDR effect" />
+<meta property="og:image" content="img/hdrify.png"/>
+
 <meta property="og:description" 
-  content="Visualization of chaotic flows using three.js / webgl - strange attractors - an experiment by Arefin Mohiuddin" />
+  content="HDRify - fake HDR effect" />
 </head>
-<body bgcolor="black">
+<body onload="handleImage('http://i.imgur.com/m2jxt4T.jpg')">
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -208,22 +207,24 @@
 <div id="topbar">
 <ul>
 	<li><a>&nbsp:.::</a></li>
-	<li><a>&nbsp+ strange attractors</a></li>
-	<li><a href="hdrify.html">&nbsp+ HDRify<sup>new</sup></a></li>
+	<li><a href="index.html">&nbsp+ strange attractors</a></li>
+	<li><a>&nbsp+ HDRify<sup style="color: red;">new</sup></a></li>
 	<li><a>&nbsp+ watch this space</a></li>
 </ul>
+</div>
+<div id="input"><form>
+Image URL:
+<input type="text" id="imgurl">
+<button type="button" onclick="handleImage(document.getElementById('imgurl').value)"> Get Image </button> or <br>
+<input type="file" id="chooseFile" value="Choose File" onchange="handleImage(window.URL.createObjectURL(this.files[0]))"> A bunch of nice landscapes <a href = "http://imgur.com/r/EarthPorn/new" target="_blank"> here </a>
+</form>
+</div>
+
 <div id="attr-name">
-oops .. !
+HDRify
 <div id ="details">
-Something went wrong. Does your browser <br>
-support <a href = "http://get.webgl.org/">WebGL </a> ?
+Fake HDR effect for your photos
 </div>
-</div>
-<div id="button" >
-<ul>
-	<li><a href="#" onclick ="changeAttractor(-1)">-</a></li>
-	<li><a href="#" onclick ="changeAttractor(1)">+</a></li>
-</ul>
 </div>
 
 <div id="social" >
@@ -243,16 +244,12 @@ support <a href = "http://get.webgl.org/">WebGL </a> ?
 		</script>
 </ul>
 </div>
-
-<script type="text/javascript" src="js/strangeAttractors.js"></script>
-
-
 <div id="bottombar">
 <ul>
 	<li><a>&nbsp ::.</a></li>
-	<li><a href="http://threejs.org/" target = "_blank">&nbsp Three.js</a></li>
-	<li><a>&nbsp left - click + drag to orbit, scroll to zoom</a></li>
-	<li><a>&nbsp <b>- + to change</b></a></li>
+	<li></li>
+	<li></li>
+	<li></li>
 	<li><a href = "about.html" target="_blank">&nbsp about</a></li>
 	<li><a>&nbsp arefin mohiuddin</a></li>
 </ul>	
