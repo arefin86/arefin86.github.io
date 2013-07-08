@@ -21,16 +21,18 @@ function init() {
 	scene.add( object );
 
 	var geometry = new THREE.SphereGeometry( 1, 4, 4 );
-	var material = new THREE.MeshNormalMaterial();
+	
 
 	for ( var i = 0; i < 100; i ++ ) {
-
+		
+		var material = new THREE.MeshBasicMaterial({color: (0xffffff * Math.random()) });
 		var mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5 ).normalize();
 		mesh.position.multiplyScalar( Math.random() * 400 );
 		mesh.rotation.set( Math.random() * 2, Math.random() * 2, Math.random() * 2 );
 		mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 50;
 		object.add( mesh );
+		 //= vec3( step(edge, invert.r), step(edge, invert.g), step(edge, invert.b) ) 
 
 	}
 
