@@ -1,0 +1,259 @@
+<!DOCTYPE html >
+<html>
+<head>
+<link rel="icon" 
+      type="image/jpeg" 
+      href="img/favicon.jpg">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta property="fb:admins" content="500107897" />
+<link href='http://fonts.googleapis.com/css?family=Ropa+Sans' rel='stylesheet' type='text/css'>
+
+<style>
+	body {
+		background-color: #000000;
+		margin: 0px;
+		overflow: hidden;
+		color: #000000;
+	}
+	
+	#topbar {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 16px;
+		color: #000000;
+		background-color: #edc10e;
+		display : block;
+		padding: 2px;
+		overflow: hidden;
+		opacity: 75%;
+		z-index: 101;
+	}
+	
+	#topbar a:hover{color: #ffffff;}
+	#topbar a:link{color: #000000; text-decoration: none;}
+	
+	#topbar ul {
+		list-style: none;
+		list-style-type:none;
+		padding:5px;
+		margin:0px;
+		
+	}
+	
+	#topbar li {
+		display:inline;
+		padding: 10px;
+	}
+	
+	#attr-name {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 48px;
+		color: #ffffff;
+		background-color: #edc10e;
+		display : block;
+		padding: 5px;
+		overflow: hidden;
+		position: fixed;
+		top: 70%;
+		right: 0px;
+		padding: 10px;
+		opacity: 75%;
+	}
+	
+	#attr-name p {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 14px;
+		color: #000000;
+		background-color: #edc10e;
+		display : block-inline;
+		overflow: hidden;
+		left: 0px;
+		margin: 0px;
+	}
+	
+	#details {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 14px;
+		color: #000000;
+		background-color: #edc10e;
+		display : block;
+		overflow: hidden;
+		left: 0px;
+		margin: 0px;
+	}
+	
+	#button {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 36px;
+		color: #000000;
+		position: fixed;
+		background-color: #edc10e;
+		display: block;
+		top: 25%;
+		left: 0px;
+		text-align: center;
+	}
+	
+	#button a:hover{color: #ffffff;}
+	#button a:link{color: #000000; text-decoration: none;}
+	
+	#button ul {
+		list-style: none;
+		list-style-type:none;
+		padding:0px;
+		margin:0px;
+	}
+	
+	#button li {
+		display:inline;
+		padding: 10px;
+	}
+	
+	#social {
+		font-family: 'Ropa Sans', sans-serif;
+		color: #000000;
+		position: fixed;
+		background-color: #edc10e;
+		display: block;
+		top: 0px;
+		right: 0px;
+		text-align: right;
+		z-index: 102;
+	}
+	
+	#social ul {
+		list-style: none;
+		list-style-type:none;
+		padding:0px;
+		margin:0px;
+	}
+	
+	#social li {
+		display:inline;
+		padding: 5px;
+	}
+		
+	#bottombar {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 16px;
+		color: #000000;
+		position: fixed;
+		background-color: #edc10e;
+		display : block;
+		bottom: 0px;
+		width: 100%;
+		left: 0px;
+		padding: 2px;
+		overflow: hidden;
+		opacity: 75%;
+		z-index: 100;
+		text-align: left;
+	}
+	
+	#bottombar a:hover{color: #ffffff;}
+	#bottombar a:link{color: #000000; text-decoration: none;}
+
+	
+	#bottombar ul {
+		list-style: none;
+		list-style-type:none;
+		padding:0px;
+		margin:0px;
+	}
+	
+	#bottombar li {
+		display:inline;
+		padding: 10px;
+	}
+</style>
+<title>Strange Attractors</title>
+<meta name="description" content="Visualization of chaotic flows using three.js / webgl - strange attractors - an experiment by Arefin Mohiuddin" />
+
+<script type="text/javascript" src="js/three.min.js"></script>
+<script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
+<script src="js/shaders/CopyShader.js"></script>
+<script src="js/shaders/FXAAShader.js"></script>
+
+<script src="js/shaders/EffectComposer.js"></script>
+<script src="js/shaders/MaskPass.js"></script>
+<script src="js/shaders/RenderPass.js"></script>
+<script src="js/shaders/ShaderPass.js"></script>
+<script src="js/shaders/SobelFilterPass.js"></script>
+
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Strange Attractors - chaotic flows" />
+<meta property="og:image" content="http://i.imgur.com/uFA5Xlb.png"/>
+<meta property="og:image" content="http://i.imgur.com/CtoAKUV.png"/>
+<meta property="og:image" content="http://i.imgur.com/B9aXULm.png"/>
+<meta property="og:image" content="http://i.imgur.com/ApaI0ud.png"/>
+<meta property="og:image" content="http://i.imgur.com/IymRQAj.png"/>
+<meta property="og:image" content="http://i.imgur.com/OEJFKaS.png"/>
+<meta property="og:image" content="http://i.imgur.com/C5EIzC5.png"/>
+<meta property="og:image" content="http://i.imgur.com/CcYuNNz.png"/>
+<meta property="og:image" content="http://i.imgur.com/24Q3QUy.png"/>
+<meta property="og:description" 
+  content="Visualization of chaotic flows using three.js / webgl - strange attractors - an experiment by Arefin Mohiuddin" />
+</head>
+<body bgcolor="black">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=258373927637306";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div id="topbar">
+<ul>
+	<li><a>&nbsp:.::</a></li>
+	<li><a>&nbsp+ strange attractors</a></li>
+	<li><a href="hdrify.html">&nbsp+ HDRify<sup>new</sup></a></li>
+	<li><a>&nbsp+ watch this space</a></li>
+</ul>
+<div id="attr-name">
+oops .. !
+<div id ="details">
+Something went wrong. Does your browser <br>
+support <a href = "http://get.webgl.org/">WebGL </a> ?
+</div>
+</div>
+<div id="button" >
+<ul>
+	<li><a href="#" onclick ="changeAttractor(-1)">-</a></li>
+	<li><a href="#" onclick ="changeAttractor(1)">+</a></li>
+</ul>
+</div>
+
+<div id="social" >
+<ul>
+	<li><div class="fb-like" data-href="http://facebook.com/ar3fin.3d " data-send="true" data-layout="button_count" data-width="10" data-show-faces="false" data-font="lucida grande"></div></li>
+	<li><div class="g-plusone" data-size="tall" data-annotation="inline" data-width="300"></div></li>
+		<script type="text/javascript">
+		  (function() {
+			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+			po.src = 'https://apis.google.com/js/plusone.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		  })();
+		</script>
+	<li><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://ar3f.in" data-hashtags="strangeattractors">Tweet</a></li>
+		<script>
+			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+		</script>
+</ul>
+</div>
+
+<script type="text/javascript" src="js/goochShading.js"></script>
+
+
+<div id="bottombar">
+<ul>
+	<li><a>&nbsp ::.</a></li>
+	<li><a href="http://threejs.org/" target = "_blank">&nbsp Three.js</a></li>
+	<li><a>&nbsp left - click + drag to orbit, scroll to zoom</a></li>
+	<li><a>&nbsp <b>- + to change</b></a></li>
+	<li><a href = "about.html" target="_blank">&nbsp about</a></li>
+	<li><a>&nbsp arefin mohiuddin</a></li>
+</ul>	
+</div>
+</body>
+</html>
