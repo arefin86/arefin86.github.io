@@ -4,6 +4,7 @@ THREE.SobelFilterPass = {
 	uniforms: {
 
 		"tDiffuse": { type: "t", value: null },
+		"uWindow": { type: "v2", value: null }
 
 	},
 
@@ -28,7 +29,7 @@ THREE.SobelFilterPass = {
 
 
 		"void main() {",
-			"vec2 onePixel = vec2( 1.0  , 1.0 ) / 512.0;",
+			"vec2 onePixel = vec2( 1.0 , 1.0 ) / 2048.0;",
 			"vec4 colorSum = ",
 			"	texture2D( tDiffuse, vUv + ( onePixel * vec2(-1.0, -1.0))) * -1.0 +",
 			"	texture2D( tDiffuse, vUv + ( onePixel * vec2( 0.0, -1.0))) * -1.0 +",

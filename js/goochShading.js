@@ -15,7 +15,7 @@ function init() {
 	camera.position.z = 400;
 
 	scene = new THREE.Scene();
-	scene.fog = new THREE.Fog( 0x000000, 1, 1000 );
+	//scene.fog = new THREE.Fog( 0x000000, 1, 1000 );
 
 	object = new THREE.Object3D();
 	scene.add( object );
@@ -49,8 +49,9 @@ function init() {
 	effect.renderToScreen = false;
 	composer.addPass( effect );
 
-	var effect = new THREE.ShaderPass( THREE.SobelFilterPass );
+	var effect = new THREE.ShaderPass(THREE.SobelFilterPass);
 	effect.renderToScreen = false;
+	effect.uniforms.uWindow = new THREE.Vector2(window.innerWidth, window.innerHeight);
 	composer.addPass( effect );
 
 	var effect = new THREE.ShaderPass( THREE.InvertThreshholdPass );
