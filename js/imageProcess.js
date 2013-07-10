@@ -63,7 +63,7 @@ var fs_blur =
 		" 		 \n"+
 		" 		 \n"+
 		" 		 \n"+
-		" 		gl_FragColor = vec4(final[0], final[1], final[2], final[3] * 0.62); \n"+
+		" 		gl_FragColor = vec4(final[0], final[1], final[2], final[3]); \n"+
         "}\n";
 
 var vs_desat_invert =

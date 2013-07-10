@@ -1,4 +1,5 @@
 var camera, scene, renderer, composer;
+var effectFXAA, cannyEdge;
 var object, light;
 init();
 animate();
@@ -49,15 +50,21 @@ function init() {
 	effect.renderToScreen = false;
 	composer.addPass( effect );
 
-	var effect = new THREE.ShaderPass(THREE.SobelFilterPass);
-	effect.renderToScreen = false;
-	effect.uniforms.uWindow = new THREE.Vector2(window.innerWidth, window.innerHeight);
-	composer.addPass( effect );
-
+	cannyEdge = new THREE.ShaderPass(THREE.CannyEdgeFilterPass);
+	cannyEdge.renderToScreen = false;
+	composer.addPass(cannyEdge);
+	
 	var effect = new THREE.ShaderPass( THREE.InvertThreshholdPass );
-	effect.renderToScreen = true;
+	effect.renderToScreen = false;
 	composer.addPass( effect );
-
+	
+	effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+	var e = window.innerWidth || 2;
+	var a = window.innerHeight || 2;
+	effectFXAA.uniforms.resolution.value.set(1/e,1/a);
+	effectFXAA.renderToScreen = true;
+	composer.addPass(effectFXAA);
+	
 	//
 
 	window.addEventListener( 'resize', onWindowResize, false );
@@ -69,7 +76,10 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
-
+	effectFXAA.uniforms.resolution.value.set(1 / window.innerWidth, 1 / window.innerHeight);
+	cannyEdge.uniforms.uWindow.set(parseFloat(window.innerWidth), parseFloat(window.innerHeight));
+    composer.reset();
+	render();
 }
 
 function animate() {
