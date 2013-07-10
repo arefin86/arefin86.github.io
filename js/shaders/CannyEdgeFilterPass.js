@@ -4,7 +4,7 @@ THREE.CannyEdgeFilterPass = {
 	uniforms: {
 
 		"tDiffuse": { type: "t", value: null },
-		"uWindow": { type: "v2", value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+		"uWindow": { type: "v2", value: new THREE.Vector2(parseFloat(window.innerWidth), parseFloat(window.innerHeight)) }
 
 	},
 
@@ -27,7 +27,7 @@ THREE.CannyEdgeFilterPass = {
 		"uniform vec2 uWindow;",
 
 		"varying vec2 vUv;",
-		"vec2 offset  = 1.0 / uWindow;",
+		"vec2 offset  = 1.0 / (uWindow / 2.0 );",
 
 		"void main() {",
 		"	vec2 pixelRight_Coord = vUv + vec2(offset.x, 0.0);",

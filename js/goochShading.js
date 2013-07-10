@@ -21,12 +21,15 @@ function init() {
 	object = new THREE.Object3D();
 	scene.add( object );
 
-	var geometry = new THREE.SphereGeometry( 1, 4, 4 );
+	var geometry = new THREE.TorusGeometry( 150,60,3,3,2 * Math.PI );
+	var material = new THREE.MeshNormalMaterial();
+	var mesh = new THREE.Mesh(geometry, material);
+	object.add(mesh);
 	
 
-	for ( var i = 0; i < 100; i ++ ) {
+/*	for ( var i = 0; i < 100; i ++ ) {
 		
-		var material = new THREE.MeshBasicMaterial({color: (0xffffff * Math.random()) });
+		var material = new THREE.MeshNormalMaterial({shading: THREE.FlatShading});
 		var mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5 ).normalize();
 		mesh.position.multiplyScalar( Math.random() * 400 );
@@ -35,13 +38,13 @@ function init() {
 		object.add( mesh );
 		 //= vec3( step(edge, invert.r), step(edge, invert.g), step(edge, invert.b) ) 
 
-	}
+	}*/
 
-	//scene.add( new THREE.AmbientLight( 0x222222 ) );
+	scene.add( new THREE.AmbientLight( 0x222222 ) );
 
 	light = new THREE.DirectionalLight( 0xffffff );
 	light.position.set( 1, 1, 1 );
-	//scene.add( light );
+	scene.add( light );
 
 	// postprocessing
 
@@ -77,9 +80,8 @@ function onWindowResize() {
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	effectFXAA.uniforms.resolution.value.set(1 / window.innerWidth, 1 / window.innerHeight);
-	cannyEdge.uniforms.uWindow.set(parseFloat(window.innerWidth), parseFloat(window.innerHeight));
+	cannyEdge.uniforms.uWindow.value.set(parseFloat(window.innerWidth), parseFloat(window.innerHeight));
     composer.reset();
-	render();
 }
 
 function animate() {
