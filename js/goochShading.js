@@ -1,6 +1,7 @@
-var camera, scene, renderer, composer;
-var effectFXAA, cannyEdge;
-var object, light;
+var camera, scene, sceneDiffuse, renderer, composer, composer2;
+var effectFXAA, cannyEdge, multiplyPass, texturePass;
+var renderTargetEdge, renderTargetDiffuse;
+var object, objectDiffuse, light;
 init();
 animate();
 function init() {
@@ -16,39 +17,37 @@ function init() {
 	camera.position.z = 400;
 
 	scene = new THREE.Scene();
-	//scene.fog = new THREE.Fog( 0x000000, 1, 1000 );
 
 	object = new THREE.Object3D();
 	scene.add( object );
 
-	var geometry = new THREE.TorusGeometry( 150,60,3,3,2 * Math.PI );
-	var material = new THREE.MeshNormalMaterial();
+	var geometry = new THREE.TorusGeometry( 120,30,5,8,2* Math.PI );
+	var material = new THREE.MeshNormalMaterial({shading: THREE.FlatShading});
 	var mesh = new THREE.Mesh(geometry, material);
 	object.add(mesh);
 	
-
-/*	for ( var i = 0; i < 100; i ++ ) {
-		
-		var material = new THREE.MeshNormalMaterial({shading: THREE.FlatShading});
-		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5 ).normalize();
-		mesh.position.multiplyScalar( Math.random() * 400 );
-		mesh.rotation.set( Math.random() * 2, Math.random() * 2, Math.random() * 2 );
-		mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 50;
-		object.add( mesh );
-		 //= vec3( step(edge, invert.r), step(edge, invert.g), step(edge, invert.b) ) 
-
-	}*/
-
-	scene.add( new THREE.AmbientLight( 0x222222 ) );
+	sceneDiffuse = new THREE.Scene();
+	//sceneDiffuse.fog = new THREE.Fog( 0x000000, 1, 1000 );
+	objectDiffuse = new THREE.Object3D();
+	sceneDiffuse.add( objectDiffuse );
+	
+	var geometry2 = new THREE.TorusGeometry( 120,30,5,8,2 * Math.PI );
+	var material = new THREE.ShaderMaterial(THREE.GoochShader);
+	var mesh = new THREE.Mesh(geometry2, material);
+	objectDiffuse.add(mesh);
 
 	light = new THREE.DirectionalLight( 0xffffff );
-	light.position.set( 1, 1, 1 );
-	scene.add( light );
+	light.position.set( 50, 50, 50 );
+	sceneDiffuse.add( light );
 
 	// postprocessing
+	
+	var renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false, generateMipmaps: false };
+	
+	renderTargetEdge = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, renderTargetParameters);
+	renderTargetEdge.generateMipmaps = false;
 
-	composer = new THREE.EffectComposer( renderer );
+	composer = new THREE.EffectComposer( renderer, renderTargetEdge );
 	var effect = new THREE.RenderPass( scene, camera );
 	effect.renderToScreen = false;
 	composer.addPass( effect );
@@ -61,12 +60,35 @@ function init() {
 	effect.renderToScreen = false;
 	composer.addPass( effect );
 	
+	var effect = new THREE.ShaderPass(THREE.CopyShader);
+	effect.renderToScreen = false;
+	composer.addPass(effect);
+	
+	renderTargetDiffuse = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, renderTargetParameters);
+	
+	composer2 = new THREE.EffectComposer(renderer, renderTargetDiffuse);
+	
+	var renderDiffuse = new THREE.RenderPass(sceneDiffuse, camera);
+	renderDiffuse.renderToScreen = false;
+	composer2.addPass(renderDiffuse);
+	
+	multiplyPass = new THREE.ShaderPass(THREE.MultiplyBlendShader);
+	multiplyPass.renderToScreen = false;
+	multiplyPass.uniforms["tEdge"].value = composer.renderTarget2;
+	multiplyPass.needsSwap = true;
+	composer2.addPass(multiplyPass);
+	
 	effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
 	var e = window.innerWidth || 2;
 	var a = window.innerHeight || 2;
 	effectFXAA.uniforms.resolution.value.set(1/e,1/a);
-	effectFXAA.renderToScreen = true;
-	composer.addPass(effectFXAA);
+	effectFXAA.renderToScreen = false;
+	composer2.addPass(effectFXAA);
+	
+	var effect = new THREE.ShaderPass(THREE.CopyShader);
+	effect.renderToScreen = true;
+	composer2.addPass(effect);
+
 	
 	//
 
@@ -81,7 +103,13 @@ function onWindowResize() {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	effectFXAA.uniforms.resolution.value.set(1 / window.innerWidth, 1 / window.innerHeight);
 	cannyEdge.uniforms.uWindow.value.set(parseFloat(window.innerWidth), parseFloat(window.innerHeight));
-    composer.reset();
+	composer.reset();
+	composer2.reset();
+	renderTargetEdge.width = renderTargetDiffuse.width = parseFloat(window.innerWidth);
+	renderTargetEdge.height = renderTargetDiffuse.height = parseFloat(window.innerHeight);
+
+	composer.render();
+	composer2.render();
 }
 
 function animate() {
@@ -91,10 +119,12 @@ function animate() {
 	var time = Date.now();
 
 	object.rotation.x += 0.005;
-	object.rotation.y += 0.01;
+	object.rotation.y += 0.01;	
+	objectDiffuse.rotation.x += 0.005;
+	objectDiffuse.rotation.y += 0.01;
 	
-	renderer.clear();
-	composer.render();
+	composer.render(0.5);
+	composer2.render(0.5);
 
 }
 
