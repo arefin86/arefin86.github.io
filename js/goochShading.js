@@ -1,10 +1,19 @@
-var camera, scene, sceneDiffuse, renderer, composer, composer2;
+var camera, scene, sceneDiffuse, renderer, composer, composer2, loader;
 var effectFXAA, cannyEdge, multiplyPass, texturePass;
 var renderTargetEdge, renderTargetDiffuse;
 var object, objectDiffuse, light;
+var meshList = [];
 init();
 animate();
 function init() {
+
+	var d = document.getElementById("attr-name");
+	d.innerHTML = "Gooch Shading + Canny Edge Detection";
+	var e = document.createElement("div");
+    e.id = "details";
+	d.appendChild(e);
+	e.innerHTML = "A Non-Photorealistic Lighting Model For Automatic Technical Illustration by Gooch et al + Profile edges using Canny Edge detection";
+	//document.getElementById("attr-name").innerHTML = "Gooch Shading + Canny Edge Detection";
     var b;
     b = document.createElement("div");
     document.body.appendChild(b);
@@ -17,27 +26,32 @@ function init() {
 	camera.position.z = 400;
 
 	scene = new THREE.Scene();
-
-	object = new THREE.Object3D();
-	scene.add( object );
-
-	var geometry = new THREE.TorusGeometry( 120,30,5,8,2* Math.PI );
-	var material = new THREE.MeshNormalMaterial({shading: THREE.FlatShading});
-	var mesh = new THREE.Mesh(geometry, material);
-	object.add(mesh);
-	
 	sceneDiffuse = new THREE.Scene();
-	//sceneDiffuse.fog = new THREE.Fog( 0x000000, 1, 1000 );
+	object = new THREE.Object3D();
 	objectDiffuse = new THREE.Object3D();
-	sceneDiffuse.add( objectDiffuse );
+
+	loader = new THREE.JSONLoader();
+	//var callback = function(geometry, materials) {createScene(geometry, materials)};
 	
-	var geometry2 = new THREE.TorusGeometry( 120,30,5,8,2 * Math.PI );
-	var material = new THREE.ShaderMaterial(THREE.GoochShader);
-	var mesh = new THREE.Mesh(geometry2, material);
-	objectDiffuse.add(mesh);
+	//loader.load("files/complete_teapot.js", callback);
+	
+	var materials = {
+		"diffuse": new THREE.ShaderMaterial(THREE.GoochShader),
+		"edge"	 : new THREE.MeshBasicMaterial({color: 0xfff})
+	};
+	
+	materials.diffuse.uniforms.WarmColor.value = new THREE.Vector3(1.0, 0.5, 0.0);
+	materials.diffuse.uniforms.CoolColor.value = new THREE.Vector3(0,0,1);
+	materials.diffuse.uniforms.SurfaceColor.value = new THREE.Vector3(0.0, 0.0, 0.8);
+
+	createScene(new THREE.TorusKnotGeometry( 50, 15, 90, 10 ), materials, new THREE.Vector3(0,30,0));
+	
+	createScene(new THREE.SphereGeometry( 80, 30, 30 ), materials, new THREE.Vector3(-300, 30, 0));
+	
+	createScene(new THREE.TorusGeometry( 80, 20, 15, 30, 2 * Math.PI ), materials, new THREE.Vector3(300, 30, 0));
 
 	light = new THREE.DirectionalLight( 0xffffff );
-	light.position.set( 50, 50, 50 );
+	light.position.set( 0, -500, 0 );
 	sceneDiffuse.add( light );
 
 	// postprocessing
@@ -112,19 +126,37 @@ function onWindowResize() {
 	composer2.render();
 }
 
+function createScene(geometry, materials, position){
+	
+	/*var m = new THREE.Matrix4();
+	m.makeScale(2,2,2);
+	geometry.applyMatrix(m);*/
+	
+	geometryDiffuse = geometry.clone();
+	meshDiffuse = new THREE.Mesh(geometryDiffuse,materials.diffuse);
+	meshDiffuse.position = position.clone();
+	sceneDiffuse.add(meshDiffuse);
+	meshList.push(meshDiffuse);
+	
+	mesh = new THREE.Mesh(geometry,materials.edge);
+	mesh.position = position.clone();
+	scene.add(mesh);
+	meshList.push(mesh);
+}
+
 function animate() {
 
 	requestAnimationFrame( animate );
 
 	var time = Date.now();
-
-	object.rotation.x += 0.005;
-	object.rotation.y += 0.01;	
-	objectDiffuse.rotation.x += 0.005;
-	objectDiffuse.rotation.y += 0.01;
-	
 	composer.render(0.5);
 	composer2.render(0.5);
+	for(var i =0; i < meshList.length; i = i + 2){
+		meshList[i].rotation.x += 0.01;
+		meshList[i].rotation.y += 0.01;
+		meshList[i+1].rotation.x += 0.01;
+		meshList[i+1].rotation.y += 0.01;
+	}
 
 }
 

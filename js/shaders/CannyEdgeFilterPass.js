@@ -1,3 +1,4 @@
+/* Written by Arefin Mohiuddin - graphics n00b */
 
 THREE.CannyEdgeFilterPass = {
 
@@ -27,7 +28,7 @@ THREE.CannyEdgeFilterPass = {
 		"uniform vec2 uWindow;",
 
 		"varying vec2 vUv;",
-		"vec2 offset  = 1.0 / (uWindow / 2.0 );",
+		"vec2 offset  = 1.0 / (uWindow / 0.5 );",
 
 		"void main() {",
 		"	vec2 pixelRight_Coord = vUv + vec2(offset.x, 0.0);",

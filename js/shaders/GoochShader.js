@@ -1,11 +1,14 @@
+/* Written by Arefin Mohiuddin - graphics n00b */
+/* with help from Gooch Shader by Randi Rost (c) 3DLabs Inc. Ltd */
+
 THREE.GoochShader = {
 
 	uniforms: {
 
-		"LightPosition": { type: "v3", value: new THREE.Vector3(0,200, 80) },
-		"SurfaceColor": { type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.8)},
-		"WarmColor": { type: "v3", value: new THREE.Vector3(1.0, 0.5, 0.0)},
-		"CoolColor": { type: "v3", value: new THREE.Vector3(0,0,1)},
+		"LightPosition": { type: "v3", value: new THREE.Vector3(0, -500, 0) },
+		"SurfaceColor": { type: "v3", value: new THREE.Vector3()},
+		"WarmColor": { type: "v3", value: new THREE.Vector3()},
+		"CoolColor": { type: "v3", value: new THREE.Vector3()},
 		"DiffuseWarm": { type: "f", value: 0.5},
 		"DiffuseCool": { type: "f", value: 0.5}
 	},
@@ -20,12 +23,12 @@ THREE.GoochShader = {
 		
 		"void main() {",
 
-			"vec3 ecPos = (modelViewMatrix * vec4(position, 1.0)).xyz;",
-			"vec3 tnorm = normalize(normalMatrix * normal);",
-			"vec3 lightVec 	= normalize(LightPosition - ecPos);",
-			"ReflectVec    	= normalize(reflect(-lightVec, tnorm));",
-			"ViewVec       	= normalize(-ecPos);",
-			"NdotL         	= (dot (lightVec, tnorm) + 1.0) * 0.5;",
+			"vec3 EyePos = (modelViewMatrix * vec4(position, 1.0)).xyz;",
+			"vec3 trans_norm = normalize(normalMatrix * normal);",
+			"vec3 lightVec 	= normalize(LightPosition - EyePos);",
+			"ReflectVec    	= normalize(reflect(-lightVec, trans_norm));",
+			"ViewVec       	= normalize(-EyePos);",
+			"NdotL         	= (dot (lightVec, trans_norm) + 1.0) * 0.5;",
 			"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
 
 		"}"

@@ -165,8 +165,8 @@
 		padding: 10px;
 	}
 </style>
-<title>Strange Attractors</title>
-<meta name="description" content="Visualization of chaotic flows using three.js / webgl - strange attractors - an experiment by Arefin Mohiuddin" />
+<title>Gooch Shading + Canny Edge</title>
+<meta name="description" content="Gooch shading + canny edge detection" />
 
 <script type="text/javascript" src="js/three.min.js"></script>
 <script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
@@ -185,18 +185,11 @@
 
 
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Strange Attractors - chaotic flows" />
-<meta property="og:image" content="http://i.imgur.com/uFA5Xlb.png"/>
-<meta property="og:image" content="http://i.imgur.com/CtoAKUV.png"/>
-<meta property="og:image" content="http://i.imgur.com/B9aXULm.png"/>
-<meta property="og:image" content="http://i.imgur.com/ApaI0ud.png"/>
-<meta property="og:image" content="http://i.imgur.com/IymRQAj.png"/>
-<meta property="og:image" content="http://i.imgur.com/OEJFKaS.png"/>
-<meta property="og:image" content="http://i.imgur.com/C5EIzC5.png"/>
-<meta property="og:image" content="http://i.imgur.com/CcYuNNz.png"/>
-<meta property="og:image" content="http://i.imgur.com/24Q3QUy.png"/>
+<meta property="og:title" content="Gooch shading + Canny edge detection" />
+<meta property="og:image" content="http://i.imgur.com/qUl2eFI.png"/>
+
 <meta property="og:description" 
-  content="Visualization of chaotic flows using three.js / webgl - strange attractors - an experiment by Arefin Mohiuddin" />
+  content="Gooch shading + canny edge detection" />
 </head>
 <body bgcolor="black">
 <div id="fb-root"></div>
@@ -210,8 +203,9 @@
 <div id="topbar">
 <ul>
 	<li><a>&nbsp:.::</a></li>
-	<li><a>&nbsp+ strange attractors</a></li>
+	<li><a href="index.html">&nbsp+ strange attractors</a></li>
 	<li><a href="hdrify.html">&nbsp+ HDRify<sup style="color: red;">new</sup></a></li>
+	<li><a>&nbsp+ Gooch Shading<sup style="color: red;">new</sup></a></li>
 	<li><a>&nbsp+ watch this space</a></li>
 </ul>
 <div id="attr-name">
@@ -223,8 +217,8 @@ support <a href = "http://get.webgl.org/">WebGL </a> ?
 </div>
 <div id="button" >
 <ul>
-	<li><a href="#" onclick ="changeAttractor(-1)">-</a></li>
-	<li><a href="#" onclick ="changeAttractor(1)">+</a></li>
+	<li><a>-</a></li>
+	<li><a>+</a></li>
 </ul>
 </div>
 
@@ -253,8 +247,8 @@ support <a href = "http://get.webgl.org/">WebGL </a> ?
 <ul>
 	<li><a>&nbsp ::.</a></li>
 	<li><a href="http://threejs.org/" target = "_blank">&nbsp Three.js</a></li>
-	<li><a>&nbsp left - click + drag to orbit, scroll to zoom</a></li>
-	<li><a>&nbsp <b>- + to change</b></a></li>
+	<li><a>&nbsp <del>left - click + drag to orbit, scroll to zoom</del></a></li>
+	<li><a>&nbsp<del>- + to change</del></a></li>
 	<li><a href = "about.html" target="_blank">&nbsp about</a></li>
 	<li><a>&nbsp arefin mohiuddin</a></li>
 </ul>	

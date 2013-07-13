@@ -1,3 +1,5 @@
+/* Written by Arefin Mohiuddin - graphics n00b */
+
 THREE.MultiplyBlendShader = {
 
 	uniforms: {
