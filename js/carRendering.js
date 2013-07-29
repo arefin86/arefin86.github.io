@@ -23,14 +23,15 @@ function init() {
 	renderer.addEffect( bloomEffect );
 	
 	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
-	camera.position.y = 50;
-	camera.position.z = 400;
+	camera.position.y = -20;
+	camera.position.x = 30;
+	camera.position.z = 200;
 	camera.lookAt(new THREE.Vector3(0,0,0));
 
 	scene = new THREE.Scene();
 
 	loader = new THREE.CTMLoader();
-	var callback = function(geometry, material) {createScene(geometry, new THREE.MeshPhongMaterial({color: 0xff, perPixel: true, shininess: 90, specular: 0xffffff}), new THREE.Vector3(0, -70, -50))};
+	var callback = function(geometry, material) {createScene(geometry, new THREE.MeshPhongMaterial({color: 0xffffff, perPixel: true, shininess: 90, specular: 0xffffff}), new THREE.Vector3(0, -70, -50))};
 	loader.load("files/evo.ctm", callback, {useWorker: false});
 
 	//createScene(new THREE.TorusKnotGeometry( 30, 10, 90, 10 ), new THREE.MeshPhongMaterial({color: 0xff, perPixel: true, shininess: 90, specular: 0xffffff}), new THREE.Vector3(0,0,0));
@@ -124,7 +125,7 @@ function animate() {
 	renderer.render(scene, camera);
 	for(var i =0; i < meshList.length; i++){
 		//meshList[i].rotation.x += 0.01;
-		meshList[i].rotation.y += 0.01;
+		//meshList[i].rotation.y += 0.01;
 	}
 
 }
