@@ -165,11 +165,63 @@
 		padding: 10px;
 	}
 </style>
+
+<script id="vertexShader" type="x-shader/x-vertex">
+// Written with great difficulty by graphics n00b Arefin Mohiuddin. Would appreciate a little credit :) 
+uniform float offset;
+uniform float delta; // <-- needs a bit of tweaking for different shape types. Should be 0.0 by default
+attribute vec3 vn;
+attribute vec3 f1n;
+attribute vec3 f2n;
+void main() {
+	
+	vec4 mvPosition = modelViewMatrix * vec4( position , 1.0);
+	vec4 viewVec = normalize(mvPosition);
+	
+	vec4 transNorm = ( modelViewMatrix * vec4 ( vn, 0.0));
+	//transNorm = normalize( transNorm );
+
+	vec4 transf1n = modelViewMatrix * vec4 ( f1n, 0.0);
+	transf1n = normalize(transf1n);
+	
+	vec4 transf2n = modelViewMatrix * vec4 ( f2n, 0.0);
+	transf2n = normalize(transf2n);
+	
+	
+	
+	float dot1 = dot( transf1n, viewVec );
+	float dot2 = dot( transf2n, viewVec );
+	
+	float vOff ;
+	
+	if (dot1 * dot2 < delta ){ vOff = 1.0;} else {vOff = 0.0;}
+	
+    
+
+	
+	vec4 disp = (transNorm * offset * vOff ) + mvPosition;
+	gl_Position = projectionMatrix * disp;
+	
+	
+	
+}
+</script>
+
+<script id="fragmentShader" type="x-shader/x-fragment">
+
+void main() {
+
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+  
+}
+
+</script>
 <title>Hardware Edges</title>
 <meta name="description" content="Hardware Edges + Gooch Shading" />
 
 <script type="text/javascript" src="js/three.min.js"></script>
 <script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
+<script src="js/shaders/GoochShader.js"></script>
 
 
 <meta property="og:type" content="website" />
