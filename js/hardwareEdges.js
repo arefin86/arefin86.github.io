@@ -9,11 +9,15 @@ animate();
 function init() {
 
 	var d = document.getElementById("attr-name");
-	d.innerHTML = "Car Rendering";
+	d.innerHTML = "Edges + Silhouettes";
 	var e = document.createElement("div");
     e.id = "details";
 	d.appendChild(e);
-	e.innerHTML = "Car rendering";
+	e.innerHTML = "Using quad-fins described in <br>";
+	var link = document.createElement("a");
+	link.href =  "http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.65.4558";
+	link.innerHTML = "NPR with Pixel and Vertex Shaders by Mitchell and Card";
+	e.appendChild(link);
     var b;
     b = document.createElement("div");
     document.body.appendChild(b);
@@ -42,18 +46,22 @@ function init() {
 	fragShader = document.getElementById('fragmentShader').innerHTML;
 	
 	var geom0 = new THREE.TorusKnotGeometry( 25, 8, 90, 10 );
-	createSilhouetteGeom(geom0, new THREE.Vector3(-80,0,0), 0.0, 1.0, new THREE.MeshLambertMaterial({color: 0x4455cc, shading: THREE.FlatShading}));
+	createSilhouetteGeom(geom0, new THREE.Vector3(-150,0,0), 0.0, 1.0, new THREE.MeshLambertMaterial({color: 0x4455ff, shading: THREE.FlatShading}));
 	
-	var geom1 = new THREE.TorusGeometry(30,8,100,100,Math.PI*2);
-	var mat1 = 	new THREE.ShaderMaterial(THREE.GoochShader);
-	mat1.uniforms.WarmColor.value = new THREE.Vector3(1.0, 0.5, 0.0);
-	mat1.uniforms.CoolColor.value = new THREE.Vector3(0,0,1);
-	mat1.uniforms.SurfaceColor.value = new THREE.Vector3(0.0, 0.0, 0.8);
-	createSilhouetteGeom(geom1, new THREE.Vector3(-180,0,0), 0.0, 1.8, mat1);
+	var loader = new THREE.BinaryLoader();
+	var mat3 = 	new THREE.ShaderMaterial(THREE.GoochShader);
+	mat3.uniforms.WarmColor.value = new THREE.Vector3(0.6, 0.6, 0.0);
+	//mat3.uniforms.WarmColor.value = new THREE.Vector3(1.0, 0.5, 0.0);
+	mat3.uniforms.CoolColor.value = new THREE.Vector3(0.0,0.0,1.0);
+	//mat3.uniforms.SurfaceColor.value = new THREE.Vector3(0.0, 0.0, 0.8);
+	mat3.uniforms.SurfaceColor.value = new THREE.Vector3(0.75, 0.75, 0.75);
+	mat3.side = THREE.DoubleSide;
+	var callback = function(geometry){createSilhouetteGeom(geometry, new THREE.Vector3(0,0,40), 0.0, 0.5, mat3, new THREE.Vector3(3.5,3.5,3.5))};
+	loader.load("files/teapot.js", callback);
 	
 	var geom2 = new THREE.CubeGeometry(60, 60, 60);
-	mat3 = new THREE.MeshLambertMaterial({color: 0x00cc00, shading: THREE.FlatShading});
-	createSilhouetteGeom(geom2, new THREE.Vector3(20,0,0), 0.0, 1.8, mat3);
+	mat2 = new THREE.MeshLambertMaterial({color: 0x00ee00, shading: THREE.FlatShading});
+	createSilhouetteGeom(geom2, new THREE.Vector3(150,0,0), 0.0, 2.8, mat2);
 	
 	window.addEventListener( 'resize', onWindowResize, false );
 
@@ -72,8 +80,8 @@ function animate() {
 	requestAnimationFrame( animate );
 	
 	for (var i=0; i< objectList.length; i++){
-		objectList[i].rotation.x += 0.01;
-		objectList[i].rotation.y += 0.01;
+		objectList[i].rotation.x += 0.005;
+		objectList[i].rotation.z += 0.005;
 	}
 	renderer.render(scene, camera);
 
@@ -227,7 +235,7 @@ function extractEdges(geometry){
 	return edgeTable;
 }
 
-function createSilhouetteGeom( refGeom, position, delta, offset, fillMaterial){
+function createSilhouetteGeom( refGeom, position, delta, offset, fillMaterial, scale){
 	
 	var object = new THREE.Object3D();
 	
@@ -249,6 +257,12 @@ function createSilhouetteGeom( refGeom, position, delta, offset, fillMaterial){
 	if(offset){
 		uniforms.offset.value = parseFloat(offset);
 	};
+	
+	if(scale){
+		var scaleMat = new THREE.Matrix4();
+		scaleMat.makeScale(scale.x, scale.y, scale.z);
+		refGeom.applyMatrix(scaleMat);
+	}
 	
 	var material = new THREE.ShaderMaterial({ uniforms: uniforms, 
 										  attributes: attributes, 
@@ -310,6 +324,7 @@ function createSilhouetteGeom( refGeom, position, delta, offset, fillMaterial){
 	if (position){
 		object.position = position.clone();
 	}
+	
 	scene.add(object);
 	objectList.push(object);
 	
