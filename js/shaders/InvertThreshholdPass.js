@@ -32,7 +32,7 @@ THREE.InvertThreshholdPass = {
 			"vec4 colorSum = texture2D( tDiffuse, vUv );",
 			"vec4 invert = vec4(1.0 - colorSum.r, 1.0 - colorSum.g, 1.0 - colorSum.b, 1.0 );",
 			"vec3 threshhold;",
-			"if(invert.r < 1.0 || invert.g < 1.0 || invert.b < 1.0){",
+			"if(invert.r < 0.985 || invert.g < 0.985 || invert.b < 0.985){",
 			"	threshhold = vec3(0.0);",
 			"	} else {",
 			"	threshhold = vec3(1.0);",

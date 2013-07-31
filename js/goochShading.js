@@ -1,7 +1,7 @@
 var camera, scene, sceneDiffuse, renderer, composer, composer2, loader;
 var effectFXAA, cannyEdge, multiplyPass, texturePass;
 var renderTargetEdge, renderTargetDiffuse;
-var object, objectDiffuse, light;
+var object, objectDiffuse;
 var meshList = [];
 init();
 animate();
@@ -22,37 +22,30 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.autoClear = false;
     b.appendChild(renderer.domElement);
-	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
-	camera.position.z = 400;
+	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+	camera.position.z = 250;
+	camera.position.y = 150;
+	camera.lookAt(new THREE.Vector3(0,0,0));
 
 	scene = new THREE.Scene();
 	sceneDiffuse = new THREE.Scene();
 	object = new THREE.Object3D();
 	objectDiffuse = new THREE.Object3D();
 
-	loader = new THREE.JSONLoader();
-	//var callback = function(geometry, materials) {createScene(geometry, materials)};
-	
-	//loader.load("files/complete_teapot.js", callback);
-	
 	var materials = {
 		"diffuse": new THREE.ShaderMaterial(THREE.GoochShader),
-		"edge"	 : new THREE.MeshBasicMaterial({color: 0xfff})
+		"edge"	 : new THREE.ShaderMaterial(THREE.NormalShader)
 	};
 	
 	materials.diffuse.uniforms.WarmColor.value = new THREE.Vector3(1.0, 0.5, 0.0);
-	materials.diffuse.uniforms.CoolColor.value = new THREE.Vector3(0,0,1);
+	materials.diffuse.uniforms.CoolColor.value = new THREE.Vector3(0,0,0.7);
 	materials.diffuse.uniforms.SurfaceColor.value = new THREE.Vector3(0.0, 0.0, 0.8);
-
-	createScene(new THREE.TorusKnotGeometry( 50, 15, 90, 10 ), materials, new THREE.Vector3(0,30,0));
+	materials.diffuse.side = THREE.DoubleSide;
+	materials.diffuse.wireframe = false;
 	
-	createScene(new THREE.SphereGeometry( 80, 30, 30 ), materials, new THREE.Vector3(-300, 30, 0));
-	
-	createScene(new THREE.TorusGeometry( 80, 20, 15, 30, 2 * Math.PI ), materials, new THREE.Vector3(300, 30, 0));
-
-	light = new THREE.DirectionalLight( 0xffffff );
-	light.position.set( 0, -500, 0 );
-	sceneDiffuse.add( light );
+	loader = new THREE.BinaryLoader();
+	var callback = function(geometry) {createScene(geometry, materials, new THREE.Vector3(0,0,0))};
+	loader.load("files/diff_2.js", callback);
 
 	// postprocessing
 	
@@ -62,10 +55,17 @@ function init() {
 	renderTargetEdge.generateMipmaps = false;
 
 	composer = new THREE.EffectComposer( renderer, renderTargetEdge );
+	
 	var effect = new THREE.RenderPass( scene, camera );
 	effect.renderToScreen = false;
 	composer.addPass( effect );
+	
+	var blur = new THREE.ShaderPass(THREE.MedianFilter);
+	blur.uniforms.dim.value.copy(new THREE.Vector2(1.0 / window.innerWidth, 1.0 / window.innerHeight));
+	blur.renderToScreen = false;
+	composer.addPass(blur);
 
+	
 	cannyEdge = new THREE.ShaderPass(THREE.CannyEdgeFilterPass);
 	cannyEdge.renderToScreen = false;
 	composer.addPass(cannyEdge);
@@ -103,9 +103,6 @@ function init() {
 	effect.renderToScreen = true;
 	composer2.addPass(effect);
 
-	
-	//
-
 	window.addEventListener( 'resize', onWindowResize, false );
 
 }
@@ -116,7 +113,7 @@ function onWindowResize() {
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	effectFXAA.uniforms.resolution.value.set(1 / window.innerWidth, 1 / window.innerHeight);
-	cannyEdge.uniforms.uWindow.value.set(parseFloat(window.innerWidth), parseFloat(window.innerHeight));
+	//cannyEdge.uniforms.uWindow.value.set(parseFloat(window.innerWidth), parseFloat(window.innerHeight));
 	composer.reset();
 	composer2.reset();
 	renderTargetEdge.width = renderTargetDiffuse.width = parseFloat(window.innerWidth);
@@ -124,13 +121,14 @@ function onWindowResize() {
 
 	composer.render();
 	composer2.render();
+
 }
 
 function createScene(geometry, materials, position){
 	
-	/*var m = new THREE.Matrix4();
-	m.makeScale(2,2,2);
-	geometry.applyMatrix(m);*/
+	var m = new THREE.Matrix4();
+	m.makeScale(1,1,1);
+	geometry.applyMatrix(m);
 	
 	geometryDiffuse = geometry.clone();
 	meshDiffuse = new THREE.Mesh(geometryDiffuse,materials.diffuse);
@@ -152,10 +150,10 @@ function animate() {
 	composer.render(0.5);
 	composer2.render(0.5);
 	for(var i =0; i < meshList.length; i = i + 2){
-		meshList[i].rotation.x += 0.01;
-		meshList[i].rotation.y += 0.01;
-		meshList[i+1].rotation.x += 0.01;
-		meshList[i+1].rotation.y += 0.01;
+		meshList[i].rotation.y += 0.005;
+
+		meshList[i+1].rotation.y += 0.005;
+
 	}
 
 }
