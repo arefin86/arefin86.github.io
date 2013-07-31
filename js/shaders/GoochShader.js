@@ -5,12 +5,12 @@ THREE.GoochShader = {
 
 	uniforms: {
 
-		"LightPosition": { type: "v3", value: new THREE.Vector3(0, -500, 0) },
+		"LightPosition": { type: "v3", value: new THREE.Vector3(0, 500, 0) },
 		"SurfaceColor": { type: "v3", value: null},
 		"WarmColor": { type: "v3", value: null},
 		"CoolColor": { type: "v3", value: null},
-		"DiffuseWarm": { type: "f", value: 0.5},
-		"DiffuseCool": { type: "f", value: 0.5}
+		"DiffuseWarm": { type: "f", value: 0.45},
+		"DiffuseCool": { type: "f", value: 0.45}
 	},
 
 	vertexShader: [

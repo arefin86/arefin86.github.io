@@ -12,7 +12,7 @@ function init() {
 	var e = document.createElement("div");
     e.id = "details";
 	d.appendChild(e);
-	e.innerHTML = "A Non-Photorealistic Lighting Model For Automatic Technical Illustration by Gooch et al + Profile edges using Canny Edge detection";
+	e.innerHTML = "A Non-Photorealistic Lighting Model For Automatic Technical Illustration by Gooch et al + Profile edges using Canny Edge detection <br> 1. The model is first rendered with object-space normals <br>2. Since Canny edge detection is susceptible to noise, I used a median filter to blur out facets<br>3. Canny edge detection is used on this <br>4.Then the image is inverted and threshholded (sic) to get black lines <br> 5. This is multiplied with the model rendered on a white background with the Gooch Shader <br>6. As evident, surfaces with same normals show no edges. <br>";
 	//document.getElementById("attr-name").innerHTML = "Gooch Shading + Canny Edge Detection";
     var b;
     b = document.createElement("div");
@@ -40,6 +40,7 @@ function init() {
 	materials.diffuse.uniforms.WarmColor.value = new THREE.Vector3(1.0, 0.5, 0.0);
 	materials.diffuse.uniforms.CoolColor.value = new THREE.Vector3(0,0,0.7);
 	materials.diffuse.uniforms.SurfaceColor.value = new THREE.Vector3(0.0, 0.0, 0.8);
+	materials.diffuse.uniforms.LightPosition.value.copy(new THREE.Vector3(100.0, 500, 200));
 	materials.diffuse.side = THREE.DoubleSide;
 	materials.diffuse.wireframe = false;
 	
