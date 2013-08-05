@@ -82,31 +82,12 @@
 	}
 	
 	#button {
-		font-family: 'Ropa Sans', sans-serif;
-		font-size: 36px;
-		color: #000000;
 		position: fixed;
-		background-color: #edc10e;
-		display: block;
 		top: 25%;
 		left: 0px;
-		text-align: center;
+
 	}
 	
-	#button a:hover{color: #ffffff;}
-	#button a:link{color: #000000; text-decoration: none;}
-	
-	#button ul {
-		list-style: none;
-		list-style-type:none;
-		padding:0px;
-		margin:0px;
-	}
-	
-	#button li {
-		display:inline;
-		padding: 10px;
-	}
 	
 	#social {
 		font-family: 'Ropa Sans', sans-serif;
@@ -167,70 +148,91 @@
 </style>
 
 <script id="vertexShader" type="x-shader/x-vertex">
-// Written with great difficulty by graphics n00b Arefin Mohiuddin. Would appreciate a little credit :) 
-uniform float offset;
-uniform float delta; // <-- needs a bit of tweaking for different shape types. Should be 0.0 by default
-attribute vec3 vn;
-attribute vec3 f1n;
-attribute vec3 f2n;
+uniform vec2 WIN_SCALE;                                                       
+attribute vec4 v0;                                                         
+attribute vec4 v1;                                                         
+attribute vec4 v2;
+varying vec3 dist; 
+
 void main() {
-	
-	vec4 mvPosition = modelViewMatrix * vec4( position , 1.0);
-	vec4 viewVec = normalize(mvPosition);
-	
-	vec4 transNorm = ( modelViewMatrix * vec4 ( vn, 0.0));
-	//transNorm = normalize( transNorm );
 
-	vec4 transf1n = modelViewMatrix * vec4 ( f1n, 0.0);
-	transf1n = normalize(transf1n);
-	
-	vec4 transf2n = modelViewMatrix * vec4 ( f2n, 0.0);
-	transf2n = normalize(transf2n);
-	
-	
-	
-	float dot1 = dot( transf1n, viewVec );
-	float dot2 = dot( transf2n, viewVec );
-	
-	float vOff ;
-	
-	if (dot1 * dot2 < delta ){ vOff = 1.0;} else {vOff = 0.0;}
-	
-    
+float swizz = v0.w;
 
+vec3 pos = v0.xyz;
+
+gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);	
+				  
+vec2 p0 = gl_Position.xy/gl_Position.w;
+
+vec4 v1_ = projectionMatrix * modelViewMatrix * v1;
+
+vec2 l1 = WIN_SCALE * (v1_.xy/ v1_.w -p0);				  
+
+vec4 v2_ = projectionMatrix * modelViewMatrix * v2;
+
+vec2 l2 = WIN_SCALE * (v2_.xy/ v2_.w -p0);
+
+float area2D = abs(l1.x*l2.y - l1.y*l2.x);
+
+float h = area2D/length(l1-l2);
+
+if (swizz <0.1) 
+	dist = vec3(h,0.0, 0.0);
+else if (swizz<1.1) 
+	dist = vec3(0.0, h, 0.0);
+else 
+	dist = vec3(0.0, 0.0, h);
 	
-	vec4 disp = (transNorm * offset * vOff ) + mvPosition;
-	gl_Position = projectionMatrix * disp;
-	
-	
-	
+dist *= gl_Position.w;
+
 }
+    
 </script>
 
 <script id="fragmentShader" type="x-shader/x-fragment">
+                                                                             
+uniform vec4 WIRE_COL;                                                        
+uniform vec3 FILL_COL;     
+uniform float opacity;                                                  
+                                                                              
+varying vec3 dist; 
 
-void main() {
-
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-  
+void main(void)
+{
+                                                                          
+   // Undo perspective correction.                                            
+	vec3 dist_vec = dist * gl_FragCoord.w;                                     
+                                                                              
+   // Compute the shortest distance to the edge                               
+	float d =min(dist_vec[0],min(dist_vec[1],dist_vec[2]));                    
+                                                                             
+   // Compute line intensity and then fragment color                          
+ 	float I = exp2(-3.0*d*d);
+	vec4 fill = vec4(FILL_COL.r , FILL_COL.g, FILL_COL.b, opacity);
+	vec4 col = I*WIRE_COL + (1.0 - I)*fill;
+	gl_FragColor = vec4(col.rgba);
 }
+  
 
 </script>
-<title>Edges + Silhouettes</title>
-<meta name="description" content="Object space edges + silhouettes" />
+<title>Single-pass wireframe rendering</title>
+<meta name="description" content="Single-pass wireframe rendering" />
 
 <script type="text/javascript" src="js/three.min.js"></script>
 <script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
+<script type="text/javascript" src="js/TrackballControls.js"></script>
 <script src="js/shaders/GoochShader.js"></script>
+<script src="js/DAT.GUI.min.js"></script>
 <script src="loaders/BinaryLoader.js"></script>
 
 
+
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Object space edges + silhouettes" />
-<meta property="og:image" content="http://i.imgur.com/DkvA7UK.png"/>
+<meta property="og:title" content="Single-pass wireframe rendering" />
+<meta property="og:image" content="http://i.imgur.com/cr4EjYY.png?1"/>
 
 <meta property="og:description" 
-  content="Object space edges + silhouettes" />
+  content="Single-pass wireframe rendering" />
 </head>
 <body bgcolor="black">
 <div id="fb-root"></div>
@@ -247,8 +249,8 @@ void main() {
 	<li><a href="index.html">&nbsp+ strange attractors</a></li>
 	<li><a href="hdrify.html">&nbsp+ HDRify<sup style="color: red;"></sup></a></li>
 	<li><a href="goochShading.html">&nbsp+ Gooch Shading<sup style="color: red;">update</sup></a></li>
-	<li><a>&nbsp+ Edges + Silhouettes<sup style="color: red;">new</sup></a></li>
-	<li><a href="wireframe.html">&nbsp+ Single-pass wireframe<sup style="color: red;">new</sup></a></li>
+	<li><a href="edges_silhouettes.html">&nbsp+ Edges + Silhouettes<sup style="color: red;">new</sup></a></li>
+	<li><a>&nbsp+ Single-pass wireframe<sup style="color: red;">new</sup></a></li>
 </ul>
 <div id="attr-name">
 oops .. !
@@ -258,10 +260,10 @@ support <a href = "http://get.webgl.org/">WebGL </a> ?
 </div>
 </div>
 <div id="button" >
-<ul>
+<!--<ul>
 	<li><a>-</a></li>
 	<li><a>+</a></li>
-</ul>
+</ul>-->
 </div>
 
 <div id="social" >
@@ -282,15 +284,14 @@ support <a href = "http://get.webgl.org/">WebGL </a> ?
 </ul>
 </div>
 
-<script type="text/javascript" src="js/hardwareEdges.js"></script>
+<script type="text/javascript" src="js/wireframe.js"></script>
 
 
 <div id="bottombar">
 <ul>
 	<li><a>&nbsp ::.</a></li>
 	<li><a href="http://threejs.org/" target = "_blank">&nbsp Three.js</a></li>
-	<li><a>&nbsp <del>left - click + drag to orbit, scroll to zoom</del></a></li>
-	<li><a>&nbsp<del>- + to change</del></a></li>
+	<li><a>&nbsp use sliders to zoom and change transparency</a></li>
 	<li><a href = "about.html" target="_blank">&nbsp about<sup style="color: red;">!!!</sup></a></li>
 	<li><a>&nbsp arefin mohiuddin</a></li>
 </ul>	
