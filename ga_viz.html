@@ -82,10 +82,31 @@
 	}
 	
 	#button {
+		font-family: 'Ropa Sans', sans-serif;
+		font-size: 20px;
+		color: #eeeeee;
 		position: fixed;
+		background-color: #edc10e;
+		display: block;
 		top: 25%;
 		left: 0px;
-
+		text-align: left;
+		padding: 10px;
+	}
+	
+	#button a:hover{color: #ffffff;}
+	#button a:link{color: #ffffff; text-decoration: none;}
+	
+	#button ul {
+		list-style: none;
+		list-style-type:none;
+		padding:0px;
+		margin:0px;
+	}
+	
+	#button li {
+		display:inline;
+		padding: 10px;
 	}
 	
 	
@@ -146,93 +167,21 @@
 		padding: 10px;
 	}
 </style>
-
-<script id="vertexShader" type="x-shader/x-vertex">
-uniform vec2 WIN_SCALE;                                                       
-attribute vec4 v0;                                                         
-attribute vec4 v1;                                                         
-attribute vec4 v2;
-varying vec3 dist; 
-
-void main() {
-
-float swizz = v0.w;
-
-vec3 pos = v0.xyz;
-
-gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);	
-				  
-vec2 p0 = gl_Position.xy/gl_Position.w;
-
-vec4 v1_ = projectionMatrix * modelViewMatrix * v1;
-
-vec2 l1 = WIN_SCALE * (v1_.xy/ v1_.w -p0);				  
-
-vec4 v2_ = projectionMatrix * modelViewMatrix * v2;
-
-vec2 l2 = WIN_SCALE * (v2_.xy/ v2_.w -p0);
-
-float area2D = abs(l1.x*l2.y - l1.y*l2.x);
-
-float h = area2D/length(l1-l2);
-
-if (swizz <0.1) 
-	dist = vec3(h,0.0, 0.0);
-else if (swizz<1.1) 
-	dist = vec3(0.0, h, 0.0);
-else 
-	dist = vec3(0.0, 0.0, h);
-	
-dist *= gl_Position.w;
-
-}
-    
-</script>
-
-<script id="fragmentShader" type="x-shader/x-fragment">
-                                                                             
-uniform vec4 WIRE_COL;                                                        
-uniform vec3 FILL_COL;     
-uniform float opacity;                                                  
-                                                                              
-varying vec3 dist; 
-
-void main(void)
-{
-                                                                          
-   // Undo perspective correction.                                            
-	vec3 dist_vec = dist * gl_FragCoord.w;                                     
-                                                                              
-   // Compute the shortest distance to the edge                               
-	float d =min(dist_vec[0],min(dist_vec[1],dist_vec[2]));                    
-                                                                             
-   // Compute line intensity and then fragment color                          
- 	float I = exp2(-3.0*d*d);
-	vec4 fill = vec4(FILL_COL.r , FILL_COL.g, FILL_COL.b, opacity);
-	vec4 col = I*WIRE_COL + (1.0 - I)*fill;
-	gl_FragColor = vec4(col.rgba);
-}
-  
-
-</script>
-<title>Single-pass wireframe rendering</title>
-<meta name="description" content="Single-pass wireframe rendering" />
+ 
+<title>Genetic Algo</title>
+<meta name="description" content="Optimization using GA" />
 
 <script type="text/javascript" src="js/three.min.js"></script>
 <script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
-<script type="text/javascript" src="js/TrackballControls.js"></script>
-<script src="js/shaders/GoochShader.js"></script>
-<script src="js/DAT.GUI.min.js"></script>
-<script src="loaders/BinaryLoader.js"></script>
 
 
 
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Single-pass wireframe rendering" />
-<meta property="og:image" content="http://i.imgur.com/cr4EjYY.png?1"/>
+<meta property="og:title" content="Genetic Algo" />
+<meta property="og:image" content="http://i.imgur.com/yunzAW9.png?1"/>
 
 <meta property="og:description" 
-  content="Single-pass wireframe rendering" />
+  content="Optimization using GA" />
 </head>
 <body bgcolor="black">
 <div id="fb-root"></div>
@@ -250,7 +199,7 @@ void main(void)
 	<li><a href="hdrify.html">&nbsp+ HDRify<sup style="color: red;"></sup></a></li>
 	<li><a href="goochShading.html">&nbsp+ Gooch Shading<sup style="color: red;">update</sup></a></li>
 	<li><a href="edges_silhouettes.html">&nbsp+ Edges + Silhouettes<sup style="color: red;">new</sup></a></li>
-	<li><a href="ga_viz.html">&nbsp+ Genetic Algorithm<sup style="color: red;">new</sup></a></li>
+	<li><a href="wireframe.html">&nbsp+ Single-pass wireframe<sup style="color: red;">new</sup></a></li>
 </ul>
 <div id="attr-name">
 oops .. !
@@ -284,14 +233,14 @@ support <a href = "http://get.webgl.org/">WebGL </a> ?
 </ul>
 </div>
 
-<script type="text/javascript" src="js/wireframe.js"></script>
+<script type="text/javascript" src="js/ga_viz.js"></script>
 
 
 <div id="bottombar">
 <ul>
 	<li><a>&nbsp ::.</a></li>
 	<li><a href="http://threejs.org/" target = "_blank">&nbsp Three.js</a></li>
-	<li><a>&nbsp use sliders to zoom and change transparency</a></li>
+	<li><a>&nbsp click to iterate</a></li>
 	<li><a href = "about.html" target="_blank">&nbsp about<sup style="color: red;">!!!</sup></a></li>
 	<li><a>&nbsp arefin mohiuddin</a></li>
 </ul>	
